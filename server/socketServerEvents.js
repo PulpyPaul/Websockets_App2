@@ -80,7 +80,6 @@ const setupSockets = (ioInstance) => {
           }
           
           io.sockets.in('room1').emit('startGame', players);
-          console.log("called");
       }
     });
   

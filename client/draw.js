@@ -19,17 +19,23 @@ const draw = () => {
             player.percent += 0.05;
         }
         
+        player.x = lerp(player.last_X, player.next_X, player.percent);
+        player.y = lerp(player.last_Y, player.next_Y, player.percent);
+        
         if (player.seeker){
             player.color = 'red';
         } else {
             player.color = 'black';
         }
-                
-        player.x = lerp(player.last_X, player.next_X, player.percent);
-        player.y = lerp(player.last_Y, player.next_Y, player.percent);
         
         ctx.fillStyle = player.color;
-        ctx.fillRect(player.x, player.y, player.width, player.height);
+        
+        // Draws only this client if they are the seeker, otherwise draw all players
+        if (players[hash].seeker && player.seeker) {
+            ctx.fillRect(player.x, player.y, player.width, player.height);    
+        } else if (!players[hash].seeker) {
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
     }
     
     requestAnimationFrame(draw);

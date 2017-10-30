@@ -73,6 +73,5 @@ const updateReady = (data) => {
 const startGame = (data) => {
     // Starts animating
     players = data;
-    console.dir(players);
     requestAnimationFrame(draw);
 };
