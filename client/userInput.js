@@ -12,6 +12,10 @@ const handleKeyDown = (e) => {
     } else if (key === 83) {
         players[hash].moveDown = true;
     }
+    
+    if(key === 32) {
+        showLocations = true;
+    }
 }
 
 // Keyup event
@@ -28,9 +32,14 @@ const handleKeyUp = (e) => {
     } else if (key === 83) {
         players[hash].moveDown = false;
     }
+    
+    if (key === 32) {
+        showLocations = false;
+    }
 }
 
 const handleReadyUp = () => {
     readyStatus = true;
-    socket.emit('userReady', readyStatus);
+    socket.emit('userReady');
 };
+

@@ -35,7 +35,7 @@ var draw = function draw() {
         // Draws only this client if they are the seeker, otherwise draw all players
         if (players[hash].seeker && player.seeker) {
             ctx.fillRect(player.x, player.y, player.width, player.height);
-        } else if (!players[hash].seeker) {
+        } else if (!players[hash].seeker || showLocations) {
             ctx.fillRect(player.x, player.y, player.width, player.height);
         }
     }
@@ -54,6 +54,7 @@ var speed = void 0; // speed of all players
 var readyButton = void 0; // button to ready up the user
 var userInfo = void 0; // information about all users
 var readyStatus = void 0; // status if the user is ready
+var showLocations = void 0; // shows all client locations
 
 var init = function init() {
 
@@ -176,6 +177,10 @@ var handleKeyDown = function handleKeyDown(e) {
     } else if (key === 83) {
         players[hash].moveDown = true;
     }
+
+    if (key === 32) {
+        showLocations = true;
+    }
 };
 
 // Keyup event
@@ -192,11 +197,15 @@ var handleKeyUp = function handleKeyUp(e) {
     } else if (key === 83) {
         players[hash].moveDown = false;
     }
+
+    if (key === 32) {
+        showLocations = false;
+    }
 };
 
 var handleReadyUp = function handleReadyUp() {
     readyStatus = true;
-    socket.emit('userReady', readyStatus);
+    socket.emit('userReady');
 };
 "use strict";
 

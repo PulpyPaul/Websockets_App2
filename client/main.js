@@ -8,6 +8,7 @@ let speed;          // speed of all players
 let readyButton;    // button to ready up the user
 let userInfo;       // information about all users
 let readyStatus;    // status if the user is ready
+let showLocations;  // shows all client locations
 
 const init = () => {
     

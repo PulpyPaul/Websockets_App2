@@ -33,7 +33,7 @@ const draw = () => {
         // Draws only this client if they are the seeker, otherwise draw all players
         if (players[hash].seeker && player.seeker) {
             ctx.fillRect(player.x, player.y, player.width, player.height);    
-        } else if (!players[hash].seeker) {
+        } else if (!players[hash].seeker || showLocations) {
             ctx.fillRect(player.x, player.y, player.width, player.height);
         }
     }
