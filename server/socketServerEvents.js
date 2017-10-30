@@ -45,7 +45,8 @@ const setupSockets = (ioInstance) => {
         moveDown: false,
         percent: 0,
         color: 'red',
-        hash: hash
+        hash: hash,
+        seeker: false
     };
       
     // gives the user a hash ID and gives them their object
@@ -64,8 +65,25 @@ const setupSockets = (ioInstance) => {
     socket.on('userReady', (data) => {
       users.ready++;
       io.sockets.in('room1').emit('updateReady', users);
+      
+      // If all users are ready, select a seeker and start the game  
+      if (users.count == users.ready && users.count > 1){
+          let keys = Object.keys(players);
+          let randomInt = Math.floor(Math.random() * users.count);
+       
+          for (let i = 0; i < keys.length; i++){
+              if (i == randomInt){
+                  players[keys[i]].seeker = true;
+              } else {
+                  players[keys[i]].seeker = false;
+              }
+          }
+          
+          io.sockets.in('room1').emit('startGame', players);
+          console.log("called");
+      }
     });
-
+  
     // handles disconnection changes
     socket.on('disconnect', () => {
       users.count--;

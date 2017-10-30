@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Lerp function
 var lerp = function lerp(start, end, percent) {
@@ -21,8 +21,10 @@ var draw = function draw() {
             player.percent += 0.05;
         }
 
-        if (player.hash === hash) {
-            // do something to the specific character
+        if (player.seeker) {
+            player.color = 'red';
+        } else {
+            player.color = 'black';
         }
 
         player.x = lerp(player.last_X, player.next_X, player.percent);
@@ -69,6 +71,7 @@ var init = function init() {
     socket.on('join', addUser);
     socket.on('updatePlayer', updatePlayer);
     socket.on('updateReady', updateReady);
+    socket.on('startGame', startGame);
 };
 
 window.onload = init;
@@ -78,7 +81,6 @@ window.onload = init;
 var addUser = function addUser(data) {
     hash = data.hash;
     players[hash] = data;
-    requestAnimationFrame(draw);
 };
 
 // Updates player's location and sends it to server
@@ -146,6 +148,13 @@ var updateReady = function updateReady(data) {
 
     userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready;
 };
+
+var startGame = function startGame(data) {
+    // Starts animating
+    players = data;
+    console.dir(players);
+    requestAnimationFrame(draw);
+};
 'use strict';
 
 // Keydown event
@@ -183,4 +192,10 @@ var handleKeyUp = function handleKeyUp(e) {
 var handleReadyUp = function handleReadyUp() {
     readyStatus = true;
     socket.emit('userReady', readyStatus);
+};
+"use strict";
+
+// https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+var getRandomInt = function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 };

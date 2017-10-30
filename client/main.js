@@ -31,6 +31,7 @@ const init = () => {
     socket.on('join', addUser);
     socket.on('updatePlayer', updatePlayer);
     socket.on('updateReady', updateReady);
+    socket.on('startGame', startGame);
 };
 
 window.onload = init;

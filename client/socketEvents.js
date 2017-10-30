@@ -2,7 +2,6 @@
 const addUser = (data) => {
     hash = data.hash;
     players[hash] = data;
-    requestAnimationFrame(draw);
 };
 
 // Updates player's location and sends it to server
@@ -69,4 +68,11 @@ const updateReady = (data) => {
     }  
     
     userInfo.innerHTML = `Players: ${users.count} \nReady: ${users.ready}`;
+};
+
+const startGame = (data) => {
+    // Starts animating
+    players = data;
+    console.dir(players);
+    requestAnimationFrame(draw);
 };

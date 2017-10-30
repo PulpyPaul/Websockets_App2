@@ -19,8 +19,10 @@ const draw = () => {
             player.percent += 0.05;
         }
         
-        if (player.hash === hash){
-            // do something to the specific character
+        if (player.seeker){
+            player.color = 'red';
+        } else {
+            player.color = 'black';
         }
                 
         player.x = lerp(player.last_X, player.next_X, player.percent);
