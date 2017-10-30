@@ -8,7 +8,7 @@ const draw = () => {
     updateLocation();
     
     // Clears the canvas
-    ctx.clearRect(0, 0, 500, 500);
+    ctx.clearRect(0, 0, 750, 750);
     
     let keys = Object.keys(players);
     

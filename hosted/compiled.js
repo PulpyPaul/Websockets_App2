@@ -10,7 +10,7 @@ var draw = function draw() {
     updateLocation();
 
     // Clears the canvas
-    ctx.clearRect(0, 0, 500, 500);
+    ctx.clearRect(0, 0, 750, 750);
 
     var keys = Object.keys(players);
 
@@ -39,23 +39,36 @@ var draw = function draw() {
 var canvas = void 0;
 var ctx = void 0;
 var socket = void 0;
-var hash = void 0;
-var players = {};
-var speed = void 0;
+var hash = void 0; // holds unique user ID
+var players = {}; // holds all player data
+var users = {}; // holds user count data
+var speed = void 0; // speed of all players
+var readyButton = void 0; // button to ready up the user
+var userInfo = void 0; // information about all users
+var readyStatus = void 0; // status if the user is ready
 
 var init = function init() {
+
+    readyStatus = false;
     speed = 5;
 
+    // Get reference to necessary HTML elements
     canvas = document.querySelector('#canvas');
     ctx = canvas.getContext('2d');
+    readyButton = document.querySelector('#readyButton');
+    userInfo = document.querySelector('#userInfo');
 
+    // Gets socket.io instance
     socket = io.connect();
 
+    // Setup Events
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
+    readyButton.onclick = handleReadyUp;
 
     socket.on('join', addUser);
     socket.on('updatePlayer', updatePlayer);
+    socket.on('updateReady', updateReady);
 };
 
 window.onload = init;
@@ -76,19 +89,19 @@ var updateLocation = function updateLocation() {
     player.last_Y = player.y;
 
     if (player.moveLeft && player.next_X > 0) {
-        player.next_X -= 4;
+        player.next_X -= speed;
     }
 
-    if (player.moveRight && player.next_X < 450) {
-        player.next_X += 4;
+    if (player.moveRight && player.next_X < 725) {
+        player.next_X += speed;
     }
 
-    if (player.moveDown && player.next_Y < 450) {
-        player.next_Y += 4;
+    if (player.moveDown && player.next_Y < 725) {
+        player.next_Y += speed;
     }
 
     if (player.moveUp && player.next_Y > 0) {
-        player.next_Y -= 4;
+        player.next_Y -= speed;
     }
 
     player.percent = 0.05;
@@ -105,7 +118,7 @@ var updatePlayer = function updatePlayer(data) {
     var player = players[data.hash];
 
     player.last_X = data.last_X;
-    player.last_y = data.last_y;
+    player.last_Y = data.last_Y;
     player.next_X = data.next_X;
     player.next_Y = data.next_Y;
     player.moveLeft = data.moveLeft;
@@ -114,7 +127,26 @@ var updatePlayer = function updatePlayer(data) {
     player.moveDown = data.moveDown;
     player.percent = 0.05;
 };
-"use strict";
+
+var updateReady = function updateReady(data) {
+
+    users = data;
+
+    // updates the ready status if a user disconnected
+    if (users.ready == 0) {
+        readyStatus = false;
+    }
+
+    // prevents the user from readying more than once
+    if (readyStatus) {
+        readyButton.disabled = true;
+    } else {
+        readyButton.disabled = false;
+    }
+
+    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready;
+};
+'use strict';
 
 // Keydown event
 var handleKeyDown = function handleKeyDown(e) {
@@ -146,4 +178,9 @@ var handleKeyUp = function handleKeyUp(e) {
     } else if (key === 83) {
         players[hash].moveDown = false;
     }
+};
+
+var handleReadyUp = function handleReadyUp() {
+    readyStatus = true;
+    socket.emit('userReady', readyStatus);
 };

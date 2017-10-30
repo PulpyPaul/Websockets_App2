@@ -13,19 +13,19 @@ const updateLocation = () => {
     player.last_Y = player.y;
     
     if (player.moveLeft && player.next_X > 0){
-        player.next_X -= 4;
+        player.next_X -= speed;
     }
     
-    if (player.moveRight && player.next_X < 450){
-        player.next_X += 4;
+    if (player.moveRight && player.next_X < 725){
+        player.next_X += speed;
     }
     
-    if (player.moveDown && player.next_Y < 450){
-        player.next_Y += 4;
+    if (player.moveDown && player.next_Y < 725){
+        player.next_Y += speed;
     }
     
     if (player.moveUp && player.next_Y > 0){
-        player.next_Y -= 4;
+        player.next_Y -= speed;
     }
     
     player.percent = 0.05;
@@ -42,7 +42,7 @@ const updatePlayer = (data) => {
     const player = players[data.hash];
     
     player.last_X = data.last_X;
-    player.last_y = data.last_y;
+    player.last_Y = data.last_Y;
     player.next_X = data.next_X;
     player.next_Y = data.next_Y;
     player.moveLeft = data.moveLeft;
@@ -50,4 +50,23 @@ const updatePlayer = (data) => {
     player.moveUp = data.moveUp;
     player.moveDown = data.moveDown;
     player.percent = 0.05;
+};
+
+const updateReady = (data) => {
+    
+    users = data;
+    
+    // updates the ready status if a user disconnected
+    if (users.ready == 0) {
+        readyStatus = false;
+    }
+        
+    // prevents the user from readying more than once
+    if (readyStatus){
+       readyButton.disabled = true; 
+    } else {
+        readyButton.disabled = false;
+    }  
+    
+    userInfo.innerHTML = `Players: ${users.count} \nReady: ${users.ready}`;
 };

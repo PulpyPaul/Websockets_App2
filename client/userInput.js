@@ -29,3 +29,8 @@ const handleKeyUp = (e) => {
         players[hash].moveDown = false;
     }
 }
+
+const handleReadyUp = () => {
+    readyStatus = true;
+    socket.emit('userReady', readyStatus);
+};
