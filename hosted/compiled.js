@@ -28,6 +28,7 @@ var draw = function draw() {
         player.x = lerp(player.last_X, player.next_X, player.percent);
         player.y = lerp(player.last_Y, player.next_Y, player.percent);
 
+        ctx.fillStyle = player.color;
         ctx.fillRect(player.x, player.y, player.width, player.height);
     }
 
@@ -72,14 +73,22 @@ var updateLocation = function updateLocation() {
     var player = players[hash];
 
     player.last_X = player.x;
-    player.last_y = player.y;
+    player.last_Y = player.y;
 
     if (player.moveLeft && player.next_X > 0) {
-        player.next_X -= 2;
+        player.next_X -= 4;
     }
 
-    if (player.moveRight && player.next_X < 400) {
-        player.next_X += 2;
+    if (player.moveRight && player.next_X < 450) {
+        player.next_X += 4;
+    }
+
+    if (player.moveDown && player.next_Y < 450) {
+        player.next_Y += 4;
+    }
+
+    if (player.moveUp && player.next_Y > 0) {
+        player.next_Y -= 4;
     }
 
     player.percent = 0.05;
@@ -101,6 +110,8 @@ var updatePlayer = function updatePlayer(data) {
     player.next_Y = data.next_Y;
     player.moveLeft = data.moveLeft;
     player.moveRight = data.moveRight;
+    player.moveUp = data.moveUp;
+    player.moveDown = data.moveDown;
     player.percent = 0.05;
 };
 "use strict";
@@ -109,18 +120,15 @@ var updatePlayer = function updatePlayer(data) {
 var handleKeyDown = function handleKeyDown(e) {
     var key = e.which;
 
-    // A 
+    // WASD
     if (key === 65) {
         players[hash].moveLeft = true;
-    }
-    // D
-    else if (key === 68) {
-            players[hash].moveRight = true;
-        }
-
-    // space
-    if (key === 32) {
-        players[hash].y -= 200;
+    } else if (key === 68) {
+        players[hash].moveRight = true;
+    } else if (key === 87) {
+        players[hash].moveUp = true;
+    } else if (key === 83) {
+        players[hash].moveDown = true;
     }
 };
 
@@ -128,12 +136,14 @@ var handleKeyDown = function handleKeyDown(e) {
 var handleKeyUp = function handleKeyUp(e) {
     var key = e.which;
 
-    // A 
+    // WASD
     if (key === 65) {
         players[hash].moveLeft = false;
+    } else if (key === 68) {
+        players[hash].moveRight = false;
+    } else if (key === 87) {
+        players[hash].moveUp = false;
+    } else if (key === 83) {
+        players[hash].moveDown = false;
     }
-    // D
-    else if (key === 68) {
-            players[hash].moveRight = false;
-        }
 };

@@ -26,6 +26,7 @@ const draw = () => {
         player.x = lerp(player.last_X, player.next_X, player.percent);
         player.y = lerp(player.last_Y, player.next_Y, player.percent);
         
+        ctx.fillStyle = player.color;
         ctx.fillRect(player.x, player.y, player.width, player.height);
     }
     

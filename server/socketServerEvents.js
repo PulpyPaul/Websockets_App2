@@ -5,6 +5,22 @@ let io;
 
 const players = {};
 
+let player = {  
+      x: 0,
+      y: 0,
+      next_X: 0,
+      next_Y: 0,
+      last_X: 0,
+      last_Y: 0,
+      width: 50,
+      height: 50,
+      moveLeft: false,
+      moveRight: false,
+      moveUp: false,
+      moveDown: false,
+      percent: 0,
+      color: 'red'
+};
 
 // setup socket server
 const setupSockets = (ioInstance) => {
@@ -19,20 +35,23 @@ const setupSockets = (ioInstance) => {
     const hash = xxh.h32(`${socket.id}${new Date().getTime()}`, 0xCAFEBABE).toString(16);
 
     socket.hash = hash;
-
+    
     players[hash] = {
-      x: 0,
-      y: 0,
-      next_X: 0,
-      next_Y: 0,
-      last_X: 0,
-      last_Y: 0,
-      width: 50,
-      height: 50,
-      moveLeft: false,
-      moveRight: false,
-      hash,
-      percent: 0
+        x: 0,
+        y: 0,
+        next_X: 0,
+        next_Y: 0,
+        last_X: 0,
+        last_Y: 0,
+        width: 50,
+        height: 50,
+        moveLeft: false,
+        moveRight: false,
+        moveUp: false,
+        moveDown: false,
+        percent: 0,
+        color: 'red',
+        hash: hash
     };
 
     socket.emit('join', players[hash]);

@@ -2,18 +2,15 @@
 const handleKeyDown = (e) => {
     let key = e.which;
     
-    // A 
+    // WASD
     if(key === 65) {
         players[hash].moveLeft = true;
-    }
-    // D
-    else if(key === 68) {
+    } else if(key === 68) {
         players[hash].moveRight = true;
-    }
-    
-    // space
-    if (key === 32){
-        players[hash].y -= 200;
+    } else if (key === 87) {
+        players[hash].moveUp = true;
+    } else if (key === 83) {
+        players[hash].moveDown = true;
     }
 }
 
@@ -21,12 +18,14 @@ const handleKeyDown = (e) => {
 const handleKeyUp = (e) => {
     let key = e.which;
     
-    // A 
+    // WASD
     if(key === 65) {
         players[hash].moveLeft = false;
-    }
-    // D
-    else if(key === 68) {
+    } else if(key === 68) {
         players[hash].moveRight = false;
+    } else if (key === 87) {
+        players[hash].moveUp = false;
+    } else if (key === 83) {
+        players[hash].moveDown = false;
     }
 }
