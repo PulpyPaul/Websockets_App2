@@ -27,8 +27,6 @@ const updateLocation = () => {
         player.next_Y -= speed;
     }
     
-    player.percent = 0.05;
-    
     socket.emit('updateLocation', player);
 };
 
