@@ -76,4 +76,9 @@ const startGame = (data) => {
     // Starts animating
     players = data;
     requestAnimationFrame(draw);
+    socket.emit('startPhysics');
+};
+
+const updateDeath = (data) => {
+    players[data.hash].alive = data.alive;
 };

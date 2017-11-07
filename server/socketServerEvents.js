@@ -1,6 +1,9 @@
 // Necessary for getting unique user ID
 const xxh = require('xxhashjs');
 
+// reference to physics class
+const physics = require('./physics.js');
+
 // holds all player data
 const players = {};
 
@@ -28,15 +31,17 @@ const setupSockets = (ioInstance) => {
     const hash = xxh.h32(`${socket.id}${new Date().getTime()}`, 0xCAFEBABE).toString(16);
 
     socket.hash = hash;
+      
+    let location = {x: getRandomInt(0, 775), y: getRandomInt(0, 375)};
 
     // creates a player object for a given ID
     players[hash] = {
-      x: 0,
-      y: 0,
-      next_X: 0,
-      next_Y: 0,
-      last_X: 0,
-      last_Y: 0,
+      x: location.x,
+      y: location.y,
+      next_X: location.x,
+      next_Y: location.y,
+      last_X: location.x,
+      last_Y: location.y,
       width: 25,
       height: 25,
       moveLeft: false,
@@ -47,6 +52,7 @@ const setupSockets = (ioInstance) => {
       color: 'red',
       hash,
       seeker: false,
+      alive: true
     };
 
     // gives the user a hash ID and gives them their object
@@ -91,7 +97,21 @@ const setupSockets = (ioInstance) => {
       io.sockets.in('room1').emit('updateReady', users);
       socket.leave('room1');
     });
+      
+    socket.on('startPhysics', () => {
+      physics.startPhysics(players);
+    });
   });
 };
 
+const handleCollision = (playerObj) => {
+    io.sockets.in('room1').emit('updateDeath', playerObj);
+};
+
+// https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+const getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 module.exports.setupSockets = setupSockets;
+module.exports.handleCollision = handleCollision;

@@ -36,7 +36,9 @@ var draw = function draw() {
         if (players[hash].seeker && player.seeker) {
             ctx.fillRect(player.x, player.y, player.width, player.height);
         } else if (!players[hash].seeker || showLocations) {
-            ctx.fillRect(player.x, player.y, player.width, player.height);
+            if (player.alive) {
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
         }
     }
 
@@ -79,6 +81,7 @@ var init = function init() {
     socket.on('updatePlayer', updatePlayer);
     socket.on('updateReady', updateReady);
     socket.on('startGame', startGame);
+    socket.on('updateDeath', updateDeath);
 };
 
 window.onload = init;
@@ -214,4 +217,9 @@ var startGame = function startGame(data) {
     // Starts animating
     players = data;
     requestAnimationFrame(draw);
+    socket.emit('startPhysics');
+};
+
+var updateDeath = function updateDeath(data) {
+    players[data.hash].alive = data.alive;
 };

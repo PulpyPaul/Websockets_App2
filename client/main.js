@@ -33,6 +33,7 @@ const init = () => {
     socket.on('updatePlayer', updatePlayer);
     socket.on('updateReady', updateReady);
     socket.on('startGame', startGame);
+    socket.on('updateDeath', updateDeath);
 };
 
 window.onload = init;

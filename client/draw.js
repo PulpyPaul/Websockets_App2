@@ -34,7 +34,9 @@ const draw = () => {
         if (players[hash].seeker && player.seeker) {
             ctx.fillRect(player.x, player.y, player.width, player.height);    
         } else if (!players[hash].seeker || showLocations) {
-            ctx.fillRect(player.x, player.y, player.width, player.height);
+            if (player.alive){
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
         }
     }
     
