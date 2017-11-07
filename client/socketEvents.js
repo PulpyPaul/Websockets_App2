@@ -35,6 +35,10 @@ const updatePlayer = (data) => {
         players[data.hash] = data;
         return;
     }
+    
+    if (hash == data.hash){
+        return;
+    }
 
     const player = players[data.hash];
     

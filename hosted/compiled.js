@@ -174,6 +174,10 @@ var updatePlayer = function updatePlayer(data) {
         return;
     }
 
+    if (hash == data.hash) {
+        return;
+    }
+
     var player = players[data.hash];
 
     player.last_X = data.last_X;
