@@ -84,85 +84,6 @@ var init = function init() {
 window.onload = init;
 'use strict';
 
-// Adds user's data and starts animating
-var addUser = function addUser(data) {
-    hash = data.hash;
-    players[hash] = data;
-};
-
-// Updates player's location and sends it to server
-var updateLocation = function updateLocation() {
-    var player = players[hash];
-
-    player.last_X = player.x;
-    player.last_Y = player.y;
-
-    if (player.moveLeft && player.next_X > 0) {
-        player.next_X -= speed;
-    }
-
-    if (player.moveRight && player.next_X < 725) {
-        player.next_X += speed;
-    }
-
-    if (player.moveDown && player.next_Y < 725) {
-        player.next_Y += speed;
-    }
-
-    if (player.moveUp && player.next_Y > 0) {
-        player.next_Y -= speed;
-    }
-
-    player.percent = 0.05;
-
-    socket.emit('updateLocation', player);
-};
-
-var updatePlayer = function updatePlayer(data) {
-    if (!players[data.hash]) {
-        players[data.hash] = data;
-        return;
-    }
-
-    var player = players[data.hash];
-
-    player.last_X = data.last_X;
-    player.last_Y = data.last_Y;
-    player.next_X = data.next_X;
-    player.next_Y = data.next_Y;
-    player.moveLeft = data.moveLeft;
-    player.moveRight = data.moveRight;
-    player.moveUp = data.moveUp;
-    player.moveDown = data.moveDown;
-    player.percent = 0.05;
-};
-
-var updateReady = function updateReady(data) {
-
-    users = data;
-
-    // updates the ready status if a user disconnected
-    if (users.ready == 0) {
-        readyStatus = false;
-    }
-
-    // prevents the user from readying more than once
-    if (readyStatus) {
-        readyButton.disabled = true;
-    } else {
-        readyButton.disabled = false;
-    }
-
-    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready;
-};
-
-var startGame = function startGame(data) {
-    // Starts animating
-    players = data;
-    requestAnimationFrame(draw);
-};
-'use strict';
-
 // Keydown event
 var handleKeyDown = function handleKeyDown(e) {
     var key = e.which;
@@ -212,4 +133,81 @@ var handleReadyUp = function handleReadyUp() {
 // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
 var getRandomInt = function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+'use strict';
+
+// Adds user's data and starts animating
+var addUser = function addUser(data) {
+    hash = data.hash;
+    players[hash] = data;
+};
+
+// Updates player's location and sends it to server
+var updateLocation = function updateLocation() {
+    var player = players[hash];
+
+    player.last_X = player.x;
+    player.last_Y = player.y;
+
+    if (player.moveLeft && player.next_X > 0) {
+        player.next_X -= speed;
+    }
+
+    if (player.moveRight && player.next_X < 725) {
+        player.next_X += speed;
+    }
+
+    if (player.moveDown && player.next_Y < 725) {
+        player.next_Y += speed;
+    }
+
+    if (player.moveUp && player.next_Y > 0) {
+        player.next_Y -= speed;
+    }
+
+    socket.emit('updateLocation', player);
+};
+
+var updatePlayer = function updatePlayer(data) {
+    if (!players[data.hash]) {
+        players[data.hash] = data;
+        return;
+    }
+
+    var player = players[data.hash];
+
+    player.last_X = data.last_X;
+    player.last_Y = data.last_Y;
+    player.next_X = data.next_X;
+    player.next_Y = data.next_Y;
+    player.moveLeft = data.moveLeft;
+    player.moveRight = data.moveRight;
+    player.moveUp = data.moveUp;
+    player.moveDown = data.moveDown;
+    player.percent = 0.05;
+};
+
+var updateReady = function updateReady(data) {
+
+    users = data;
+
+    // updates the ready status if a user disconnected
+    if (users.ready == 0) {
+        readyStatus = false;
+    }
+
+    // prevents the user from readying more than once
+    if (readyStatus) {
+        readyButton.disabled = true;
+    } else {
+        readyButton.disabled = false;
+    }
+
+    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready;
+};
+
+var startGame = function startGame(data) {
+    // Starts animating
+    players = data;
+    requestAnimationFrame(draw);
 };
