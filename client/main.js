@@ -3,12 +3,13 @@ let ctx;
 let socket;
 let hash;           // holds unique user ID
 let players = {};   // holds all player data
-let users = {};     // holds user count data
+let users = {};     // holds users information
 let speed;          // speed of all players
 let readyButton;    // button to ready up the user
 let userInfo;       // information about all users
 let readyStatus;    // status if the user is ready
 let showLocations;  // shows all client locations
+let animationFrame; // holds reference to requestAnimationFrame
 
 const init = () => {
     
@@ -34,6 +35,7 @@ const init = () => {
     socket.on('updateReady', updateReady);
     socket.on('startGame', startGame);
     socket.on('updateDeath', updateDeath);
+    socket.on('restartRound', resetGame);
 };
 
 window.onload = init;

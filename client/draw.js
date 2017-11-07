@@ -40,5 +40,5 @@ const draw = () => {
         }
     }
     
-    requestAnimationFrame(draw);
+    animationFrame = requestAnimationFrame(draw);
 }

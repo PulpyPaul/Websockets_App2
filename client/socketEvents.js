@@ -55,6 +55,7 @@ const updatePlayer = (data) => {
 
 const updateReady = (data) => {
     
+    // updates number of users in the room and the number of them ready/alive
     users = data;
     
     // updates the ready status if a user disconnected
@@ -69,7 +70,7 @@ const updateReady = (data) => {
         readyButton.disabled = false;
     }  
     
-    userInfo.innerHTML = `Players: ${users.count} \nReady: ${users.ready}`;
+    updateUserInfo();
 };
 
 const startGame = (data) => {
@@ -77,8 +78,16 @@ const startGame = (data) => {
     players = data;
     requestAnimationFrame(draw);
     socket.emit('startPhysics');
+    updateLivingCount();
 };
 
 const updateDeath = (data) => {
     players[data.hash].alive = data.alive;
+    updateLivingCount();
+};
+
+const resetGame = () => {
+    resetReady();
+    resetLiving();
+    resetPosition();
 };

@@ -42,7 +42,7 @@ var draw = function draw() {
         }
     }
 
-    requestAnimationFrame(draw);
+    animationFrame = requestAnimationFrame(draw);
 };
 'use strict';
 
@@ -51,12 +51,13 @@ var ctx = void 0;
 var socket = void 0;
 var hash = void 0; // holds unique user ID
 var players = {}; // holds all player data
-var users = {}; // holds user count data
+var users = {}; // holds users information
 var speed = void 0; // speed of all players
 var readyButton = void 0; // button to ready up the user
 var userInfo = void 0; // information about all users
 var readyStatus = void 0; // status if the user is ready
 var showLocations = void 0; // shows all client locations
+var animationFrame = void 0; // holds reference to requestAnimationFrame
 
 var init = function init() {
 
@@ -82,6 +83,7 @@ var init = function init() {
     socket.on('updateReady', updateReady);
     socket.on('startGame', startGame);
     socket.on('updateDeath', updateDeath);
+    socket.on('restartRound', resetGame);
 };
 
 window.onload = init;
@@ -131,11 +133,59 @@ var handleReadyUp = function handleReadyUp() {
     readyStatus = true;
     socket.emit('userReady');
 };
-"use strict";
+'use strict';
 
 // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
 var getRandomInt = function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+var updateUserInfo = function updateUserInfo() {
+    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready + ' \nAlive: ' + users.alive;
+};
+
+var updateLivingCount = function updateLivingCount() {
+    var keys = Object.keys(players);
+
+    var livingCount = 0;
+
+    for (var i = 0; i < keys.length; i++) {
+        if (players[keys[i]].alive && !players[keys[i]].seeker) {
+            livingCount++;
+        }
+    }
+
+    users.alive = livingCount;
+
+    updateUserInfo();
+
+    if (users.alive == 0) {
+        cancelAnimationFrame(animationFrame);
+        ctx.clearRect(0, 0, 400, 800);
+        socket.emit('restartRound');
+    }
+};
+
+var resetReady = function resetReady() {
+    readyStatus = false;
+    readyButton.disabled = false;
+};
+
+var resetLiving = function resetLiving() {
+    var keys = Object.keys(players);
+
+    for (var i = 0; i < keys.length; i++) {
+        players[keys[i]].alive = true;
+    }
+};
+
+var resetPosition = function resetPosition() {
+    var location = { x: getRandomInt(0, 775), y: getRandomInt(0, 375) };
+
+    players[hash].x = players[hash].last_X = players[hash].next_X = location.x;
+    players[hash].y = players[hash].last_Y = players[hash].next_Y = location.y;
+
+    socket.emit('updateLocation', players[hash]);
 };
 'use strict';
 
@@ -196,6 +246,7 @@ var updatePlayer = function updatePlayer(data) {
 
 var updateReady = function updateReady(data) {
 
+    // updates number of users in the room and the number of them ready/alive
     users = data;
 
     // updates the ready status if a user disconnected
@@ -210,7 +261,7 @@ var updateReady = function updateReady(data) {
         readyButton.disabled = false;
     }
 
-    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready;
+    updateUserInfo();
 };
 
 var startGame = function startGame(data) {
@@ -218,8 +269,16 @@ var startGame = function startGame(data) {
     players = data;
     requestAnimationFrame(draw);
     socket.emit('startPhysics');
+    updateLivingCount();
 };
 
 var updateDeath = function updateDeath(data) {
     players[data.hash].alive = data.alive;
+    updateLivingCount();
+};
+
+var resetGame = function resetGame() {
+    resetReady();
+    resetLiving();
+    resetPosition();
 };

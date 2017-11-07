@@ -11,6 +11,7 @@ const players = {};
 const users = {
   count: 0,
   ready: 0,
+  alive: 0
 };
 
 // socket io instance
@@ -100,6 +101,11 @@ const setupSockets = (ioInstance) => {
       
     socket.on('startPhysics', () => {
       physics.startPhysics(players);
+    });
+      
+    socket.on('restartRound', () => {
+       users.ready = 0;
+       io.sockets.in('room1').emit('restartRound');
     });
   });
 };
