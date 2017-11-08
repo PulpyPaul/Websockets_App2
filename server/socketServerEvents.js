@@ -11,11 +11,15 @@ const players = {};
 const users = {
   count: 0,
   ready: 0,
-  alive: 0
+  alive: 0,
 };
 
 // socket io instance
 let io;
+
+// Gets a random int
+// https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 // setup socket server
 const setupSockets = (ioInstance) => {
@@ -32,8 +36,8 @@ const setupSockets = (ioInstance) => {
     const hash = xxh.h32(`${socket.id}${new Date().getTime()}`, 0xCAFEBABE).toString(16);
 
     socket.hash = hash;
-      
-    let location = {x: getRandomInt(0, 575), y: getRandomInt(0, 375)};
+
+    const location = { x: getRandomInt(0, 575), y: getRandomInt(0, 375) };
 
     // creates a player object for a given ID
     players[hash] = {
@@ -53,7 +57,7 @@ const setupSockets = (ioInstance) => {
       color: 'red',
       hash,
       seeker: false,
-      alive: true
+      alive: true,
     };
 
     // gives the user a hash ID and gives them their object
@@ -98,30 +102,24 @@ const setupSockets = (ioInstance) => {
       io.sockets.in('room1').emit('updateReady', users);
       socket.leave('room1');
     });
-    
+
     // starts calculating physics
     socket.on('startPhysics', () => {
       physics.startPhysics(players);
     });
-    
+
     // sends event to restart the round
     socket.on('restartRound', () => {
-       users.ready = 0;
-       io.sockets.in('room1').emit('restartRound');
+      users.ready = 0;
+      io.sockets.in('room1').emit('restartRound');
     });
   });
 };
 
 // Handles a collision between players
 const handleCollision = (playerObj) => {
-    io.sockets.in('room1').emit('updateDeath', playerObj);
+  io.sockets.in('room1').emit('updateDeath', playerObj);
 };
-
-// Gets a random int
-// https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-const getRandomInt = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 module.exports.setupSockets = setupSockets;
 module.exports.handleCollision = handleCollision;
