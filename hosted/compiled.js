@@ -45,6 +45,25 @@ var draw = function draw() {
     animationFrame = requestAnimationFrame(draw);
 };
 
+// https://stackoverflow.com/questions/29649643/how-to-create-a-circular-countdown-timer-using-html-css-or-javascript
+var drawTimer = function drawTimer() {
+    maxTime = 30; /* how long the timer runs for */
+    var initialOffset = '440';
+    gameTimer = 0;
+    var interval = setInterval(function () {
+        $('.circle_animation').css('stroke-dashoffset', initialOffset - gameTimer * (initialOffset / maxTime));
+        $('h2').text(gameTimer);
+        if (gameTimer == maxTime + 1) {
+            gameOver = true;
+            updateLivingCount();
+            $('svg').hide();
+            $('h2').hide();
+            clearInterval(interval);
+        }
+        gameTimer++;
+    }, 1000);
+};
+
 var drawGameOver = function drawGameOver() {
 
     // Draws black cover screen
@@ -72,6 +91,11 @@ var userInfo = void 0; // information about all users
 var readyStatus = void 0; // status if the user is ready
 var showLocations = void 0; // shows all client locations
 var animationFrame = void 0; // holds reference to requestAnimationFrame
+var marcoCallCount = 0; // how many times the seekers called marco
+var gameTimer = void 0; // how long the game has been running
+var maxTime = void 0; // max time of a game
+var gameOver = false; // if the game is over
+var marcoWins = false; // if marco wins
 
 var init = function init() {
 
@@ -184,6 +208,7 @@ var startGame = function startGame(data) {
     requestAnimationFrame(draw);
     socket.emit('startPhysics');
     updateLivingCount();
+    drawTimer();
 };
 
 var updateDeath = function updateDeath(data) {
@@ -195,6 +220,7 @@ var resetGame = function resetGame() {
     resetReady();
     resetLiving();
     resetPosition();
+    marcoCallCount = 0;
     clearScreen();
     drawGameOver();
 };
@@ -224,7 +250,7 @@ var updateLivingCount = function updateLivingCount() {
 
     updateUserInfo();
 
-    if (users.alive == 0) {
+    if (users.alive == 0 || gameOver) {
         cancelAnimationFrame(animationFrame);
         ctx.clearRect(0, 0, 600, 400);
         socket.emit('restartRound');
@@ -278,8 +304,18 @@ var handleKeyDown = function handleKeyDown(e) {
         players[hash].moveDown = true;
     }
 
-    if (key === 32) {
-        showLocations = true;
+    // Spacebar
+    if (key === 32 && !showLocations) {
+        if (marcoCallCount < 6) {
+            showLocations = true;
+            marcoCallCount++;
+
+            if (showLocations) {
+                setTimeout(function () {
+                    showLocations = false;
+                }, 500);
+            }
+        }
     }
 };
 
@@ -296,10 +332,6 @@ var handleKeyUp = function handleKeyUp(e) {
         players[hash].moveUp = false;
     } else if (key === 83) {
         players[hash].moveDown = false;
-    }
-
-    if (key === 32) {
-        showLocations = false;
     }
 };
 

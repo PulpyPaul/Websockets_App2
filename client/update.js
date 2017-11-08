@@ -22,7 +22,7 @@ const updateLivingCount = () => {
     
     updateUserInfo();
     
-    if (users.alive == 0){
+    if (users.alive == 0 || gameOver){
         cancelAnimationFrame(animationFrame);
         ctx.clearRect(0, 0, 600, 400);
         socket.emit('restartRound');

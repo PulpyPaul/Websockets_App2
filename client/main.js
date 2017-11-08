@@ -1,15 +1,20 @@
 let canvas;
 let ctx;
 let socket;
-let hash;           // holds unique user ID
-let players = {};   // holds all player data
-let users = {};     // holds users information
-let speed;          // speed of all players
-let readyButton;    // button to ready up the user
-let userInfo;       // information about all users
-let readyStatus;    // status if the user is ready
-let showLocations;  // shows all client locations
-let animationFrame; // holds reference to requestAnimationFrame
+let hash;               // holds unique user ID
+let players = {};       // holds all player data
+let users = {};         // holds users information
+let speed;              // speed of all players
+let readyButton;        // button to ready up the user
+let userInfo;           // information about all users
+let readyStatus;        // status if the user is ready
+let showLocations;      // shows all client locations
+let animationFrame;     // holds reference to requestAnimationFrame
+let marcoCallCount = 0; // how many times the seekers called marco
+let gameTimer;          // how long the game has been running
+let maxTime;            // max time of a game
+let gameOver = false;   // if the game is over
+let marcoWins = false;  // if marco wins
 
 const init = () => {
     

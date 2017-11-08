@@ -43,6 +43,25 @@ const draw = () => {
     animationFrame = requestAnimationFrame(draw);
 };
 
+// https://stackoverflow.com/questions/29649643/how-to-create-a-circular-countdown-timer-using-html-css-or-javascript
+const drawTimer = () => {
+    maxTime = 30; /* how long the timer runs for */
+    let initialOffset = '440';
+    gameTimer = 0;
+    let interval = setInterval(() => {
+        $('.circle_animation').css('stroke-dashoffset', initialOffset-(gameTimer*(initialOffset/maxTime)));
+        $('h2').text(gameTimer);
+        if (gameTimer == maxTime + 1) {
+            gameOver = true;
+            updateLivingCount();
+            $('svg').hide();
+            $('h2').hide();
+            clearInterval(interval);
+        } 
+        gameTimer++;  
+    }, 1000);  
+};
+
 const drawGameOver = () => {
     
     // Draws black cover screen
@@ -56,3 +75,4 @@ const drawGameOver = () => {
     ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
     ctx.fillText("Ready Up to play again!", canvas.width / 2, canvas.height / 2 + 50);
 };
+

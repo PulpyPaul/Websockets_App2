@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Syncing Data 3</title>
+    <title>Marco Polo</title>
     <meta charset="utf-8"/>
     <script src="/socket.io/socket.io.js"></script>
 	<script src="/assets/compiled.js"> </script>
-    <style>
-        canvas {
-            border: 1px black solid;
-        }
-    </style>
+    <link type="text/css" rel="stylesheet" href="/assets/css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/assets/css/myStyle.css"/>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/assets/js/materialize.min.js"></script>
 </head>
 <body>
     <button id="readyButton">Ready</button>
     <p id="userInfo">USER COUNT AND READY GOES HERE</p>
+    <div class="item html">
+        <h2>0</h2>
+        <svg width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <title>Layer 1</title>
+                <circle id="circle" class="circle_animation" r="69.85699" cy="81" cx="81" stroke-width="8" stroke="#6fdb6f"   fill="none"/>
+            </g>
+        </svg>
+    </div>
     <canvas id="canvas" height="400" width="600"></canvas>
 </body>
 </html>

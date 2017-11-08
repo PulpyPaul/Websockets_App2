@@ -13,10 +13,20 @@ const handleKeyDown = (e) => {
         players[hash].moveDown = true;
     }
     
-    if(key === 32) {
-        showLocations = true;
+    // Spacebar
+    if(key === 32 && !showLocations) {
+        if (marcoCallCount < 6){
+            showLocations = true; 
+            marcoCallCount++;
+            
+            if (showLocations){
+                setTimeout(() => {
+                    showLocations = false;
+                }, 500);
+            }
+        }
     }
-}
+};
 
 // Keyup event
 const handleKeyUp = (e) => {
@@ -32,11 +42,7 @@ const handleKeyUp = (e) => {
     } else if (key === 83) {
         players[hash].moveDown = false;
     }
-    
-    if (key === 32) {
-        showLocations = false;
-    }
-}
+};
 
 const handleReadyUp = () => {
     readyStatus = true;

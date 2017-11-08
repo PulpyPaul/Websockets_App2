@@ -79,6 +79,7 @@ const startGame = (data) => {
     requestAnimationFrame(draw);
     socket.emit('startPhysics');
     updateLivingCount();
+    drawTimer();
 };
 
 const updateDeath = (data) => {
@@ -90,6 +91,7 @@ const resetGame = () => {
     resetReady();
     resetLiving();
     resetPosition();
+    marcoCallCount = 0;
     clearScreen();
     drawGameOver();
 };
