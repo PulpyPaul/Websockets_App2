@@ -8,7 +8,7 @@ const draw = () => {
     updateLocation();
     
     // Clears the canvas
-    ctx.clearRect(0, 0, 750, 750);
+    ctx.clearRect(0, 0, 600, 400);
     
     let keys = Object.keys(players);
     
@@ -41,4 +41,18 @@ const draw = () => {
     }
     
     animationFrame = requestAnimationFrame(draw);
-}
+};
+
+const drawGameOver = () => {
+    
+    // Draws black cover screen
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draws 'Game Over' text
+    ctx.fillStyle = 'black';
+    ctx.font = "25px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("Ready Up to play again!", canvas.width / 2, canvas.height / 2 + 50);
+};

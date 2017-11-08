@@ -10,7 +10,7 @@ var draw = function draw() {
     updateLocation();
 
     // Clears the canvas
-    ctx.clearRect(0, 0, 750, 750);
+    ctx.clearRect(0, 0, 600, 400);
 
     var keys = Object.keys(players);
 
@@ -43,6 +43,20 @@ var draw = function draw() {
     }
 
     animationFrame = requestAnimationFrame(draw);
+};
+
+var drawGameOver = function drawGameOver() {
+
+    // Draws black cover screen
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draws 'Game Over' text
+    ctx.fillStyle = 'black';
+    ctx.font = "25px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("Ready Up to play again!", canvas.width / 2, canvas.height / 2 + 50);
 };
 'use strict';
 
@@ -89,106 +103,6 @@ var init = function init() {
 window.onload = init;
 'use strict';
 
-// Keydown event
-var handleKeyDown = function handleKeyDown(e) {
-    var key = e.which;
-
-    // WASD
-    if (key === 65) {
-        players[hash].moveLeft = true;
-    } else if (key === 68) {
-        players[hash].moveRight = true;
-    } else if (key === 87) {
-        players[hash].moveUp = true;
-    } else if (key === 83) {
-        players[hash].moveDown = true;
-    }
-
-    if (key === 32) {
-        showLocations = true;
-    }
-};
-
-// Keyup event
-var handleKeyUp = function handleKeyUp(e) {
-    var key = e.which;
-
-    // WASD
-    if (key === 65) {
-        players[hash].moveLeft = false;
-    } else if (key === 68) {
-        players[hash].moveRight = false;
-    } else if (key === 87) {
-        players[hash].moveUp = false;
-    } else if (key === 83) {
-        players[hash].moveDown = false;
-    }
-
-    if (key === 32) {
-        showLocations = false;
-    }
-};
-
-var handleReadyUp = function handleReadyUp() {
-    readyStatus = true;
-    socket.emit('userReady');
-};
-'use strict';
-
-// https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-var getRandomInt = function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-var updateUserInfo = function updateUserInfo() {
-    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready + ' \nAlive: ' + users.alive;
-};
-
-var updateLivingCount = function updateLivingCount() {
-    var keys = Object.keys(players);
-
-    var livingCount = 0;
-
-    for (var i = 0; i < keys.length; i++) {
-        if (players[keys[i]].alive && !players[keys[i]].seeker) {
-            livingCount++;
-        }
-    }
-
-    users.alive = livingCount;
-
-    updateUserInfo();
-
-    if (users.alive == 0) {
-        cancelAnimationFrame(animationFrame);
-        ctx.clearRect(0, 0, 400, 800);
-        socket.emit('restartRound');
-    }
-};
-
-var resetReady = function resetReady() {
-    readyStatus = false;
-    readyButton.disabled = false;
-};
-
-var resetLiving = function resetLiving() {
-    var keys = Object.keys(players);
-
-    for (var i = 0; i < keys.length; i++) {
-        players[keys[i]].alive = true;
-    }
-};
-
-var resetPosition = function resetPosition() {
-    var location = { x: getRandomInt(0, 775), y: getRandomInt(0, 375) };
-
-    players[hash].x = players[hash].last_X = players[hash].next_X = location.x;
-    players[hash].y = players[hash].last_Y = players[hash].next_Y = location.y;
-
-    socket.emit('updateLocation', players[hash]);
-};
-'use strict';
-
 // Adds user's data and starts animating
 var addUser = function addUser(data) {
     hash = data.hash;
@@ -206,11 +120,11 @@ var updateLocation = function updateLocation() {
         player.next_X -= speed;
     }
 
-    if (player.moveRight && player.next_X < 725) {
+    if (player.moveRight && player.next_X < 575) {
         player.next_X += speed;
     }
 
-    if (player.moveDown && player.next_Y < 725) {
+    if (player.moveDown && player.next_Y < 375) {
         player.next_Y += speed;
     }
 
@@ -281,4 +195,115 @@ var resetGame = function resetGame() {
     resetReady();
     resetLiving();
     resetPosition();
+    clearScreen();
+    drawGameOver();
+};
+'use strict';
+
+// https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+var getRandomInt = function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+var updateUserInfo = function updateUserInfo() {
+    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready + ' \nAlive: ' + users.alive;
+};
+
+var updateLivingCount = function updateLivingCount() {
+    var keys = Object.keys(players);
+
+    var livingCount = 0;
+
+    for (var i = 0; i < keys.length; i++) {
+        if (players[keys[i]].alive && !players[keys[i]].seeker) {
+            livingCount++;
+        }
+    }
+
+    users.alive = livingCount;
+
+    updateUserInfo();
+
+    if (users.alive == 0) {
+        cancelAnimationFrame(animationFrame);
+        ctx.clearRect(0, 0, 600, 400);
+        socket.emit('restartRound');
+    }
+};
+
+var resetReady = function resetReady() {
+    readyStatus = false;
+    readyButton.disabled = false;
+};
+
+var resetLiving = function resetLiving() {
+    var keys = Object.keys(players);
+
+    for (var i = 0; i < keys.length; i++) {
+        players[keys[i]].alive = true;
+    }
+};
+
+var resetPosition = function resetPosition() {
+    var location = { x: getRandomInt(0, 575), y: getRandomInt(0, 375) };
+
+    players[hash].x = players[hash].last_X = players[hash].next_X = location.x;
+    players[hash].y = players[hash].last_Y = players[hash].next_Y = location.y;
+
+    players[hash].moveLeft = false;
+    players[hash].moveRight = false;
+    players[hash].moveDown = false;
+    players[hash].moveUp = false;
+
+    socket.emit('updateLocation', players[hash]);
+};
+
+var clearScreen = function clearScreen() {
+    ctx.clearRect(0, 0, 600, 400);
+};
+'use strict';
+
+// Keydown event
+var handleKeyDown = function handleKeyDown(e) {
+    var key = e.which;
+
+    // WASD
+    if (key === 65) {
+        players[hash].moveLeft = true;
+    } else if (key === 68) {
+        players[hash].moveRight = true;
+    } else if (key === 87) {
+        players[hash].moveUp = true;
+    } else if (key === 83) {
+        players[hash].moveDown = true;
+    }
+
+    if (key === 32) {
+        showLocations = true;
+    }
+};
+
+// Keyup event
+var handleKeyUp = function handleKeyUp(e) {
+    var key = e.which;
+
+    // WASD
+    if (key === 65) {
+        players[hash].moveLeft = false;
+    } else if (key === 68) {
+        players[hash].moveRight = false;
+    } else if (key === 87) {
+        players[hash].moveUp = false;
+    } else if (key === 83) {
+        players[hash].moveDown = false;
+    }
+
+    if (key === 32) {
+        showLocations = false;
+    }
+};
+
+var handleReadyUp = function handleReadyUp() {
+    readyStatus = true;
+    socket.emit('userReady');
 };

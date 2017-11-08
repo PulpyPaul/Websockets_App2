@@ -24,7 +24,7 @@ const updateLivingCount = () => {
     
     if (users.alive == 0){
         cancelAnimationFrame(animationFrame);
-        ctx.clearRect(0, 0, 400, 800);
+        ctx.clearRect(0, 0, 600, 400);
         socket.emit('restartRound');
     }
 };
@@ -43,10 +43,19 @@ const resetLiving = () => {
 };
 
 const resetPosition = () => {
-    let location = {x: getRandomInt(0, 775), y: getRandomInt(0, 375)};
+    let location = {x: getRandomInt(0, 575), y: getRandomInt(0, 375)};
         
     players[hash].x = players[hash].last_X = players[hash].next_X = location.x;
     players[hash].y = players[hash].last_Y = players[hash].next_Y = location.y;
     
+    players[hash].moveLeft = false;
+    players[hash].moveRight = false;
+    players[hash].moveDown = false;
+    players[hash].moveUp = false;
+        
     socket.emit('updateLocation', players[hash]);
+};
+
+const clearScreen = () => {
+    ctx.clearRect(0, 0, 600, 400);
 };

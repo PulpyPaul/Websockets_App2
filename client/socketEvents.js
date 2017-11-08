@@ -15,11 +15,11 @@ const updateLocation = () => {
         player.next_X -= speed;
     }
     
-    if (player.moveRight && player.next_X < 725){
+    if (player.moveRight && player.next_X < 575){
         player.next_X += speed;
     }
     
-    if (player.moveDown && player.next_Y < 725){
+    if (player.moveDown && player.next_Y < 375){
         player.next_Y += speed;
     }
     
@@ -90,4 +90,6 @@ const resetGame = () => {
     resetReady();
     resetLiving();
     resetPosition();
+    clearScreen();
+    drawGameOver();
 };

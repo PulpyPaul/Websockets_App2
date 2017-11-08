@@ -33,7 +33,7 @@ const setupSockets = (ioInstance) => {
 
     socket.hash = hash;
       
-    let location = {x: getRandomInt(0, 775), y: getRandomInt(0, 375)};
+    let location = {x: getRandomInt(0, 575), y: getRandomInt(0, 375)};
 
     // creates a player object for a given ID
     players[hash] = {
