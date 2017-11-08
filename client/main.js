@@ -15,6 +15,7 @@ let gameTimer;          // how long the game has been running
 let maxTime;            // max time of a game
 let gameOver = false;   // if the game is over
 let marcoWins = false;  // if marco wins
+let timerInterval;
 
 const init = () => {
     
@@ -26,7 +27,7 @@ const init = () => {
     ctx = canvas.getContext('2d');
     readyButton = document.querySelector('#readyButton');
     userInfo = document.querySelector('#userInfo');
-        
+            
     // Gets socket.io instance
     socket = io.connect();
     
@@ -34,7 +35,11 @@ const init = () => {
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp); 
     readyButton.onclick = handleReadyUp;
-        
+    
+    // Hides elements that don't need to be shown yet
+    $('h2').hide();
+    
+    // Setup socket events
     socket.on('join', addUser);
     socket.on('updatePlayer', updatePlayer);
     socket.on('updateReady', updateReady);

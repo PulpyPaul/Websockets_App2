@@ -4,7 +4,7 @@ const addUser = (data) => {
     players[hash] = data;
 };
 
-// Updates player's location and sends it to server
+// Updates player's last and next locations
 const updateLocation = () => {
     const player = players[hash];
     
@@ -30,6 +30,7 @@ const updateLocation = () => {
     socket.emit('updateLocation', player);
 };
 
+// Updates the player's movement data from the server
 const updatePlayer = (data) => {
     if (!players[data.hash]) {
         players[data.hash] = data;
@@ -53,6 +54,7 @@ const updatePlayer = (data) => {
     player.percent = 0.05;
 };
 
+// updates the ready status of the user
 const updateReady = (data) => {
     
     // updates number of users in the room and the number of them ready/alive
@@ -73,25 +75,29 @@ const updateReady = (data) => {
     updateUserInfo();
 };
 
+// Starts the game in canvas and begins drawing
 const startGame = (data) => {
-    // Starts animating
     players = data;
     requestAnimationFrame(draw);
+    $('svg').show();
     socket.emit('startPhysics');
     updateLivingCount();
     drawTimer();
 };
 
+// Handles a death within the game
 const updateDeath = (data) => {
     players[data.hash].alive = data.alive;
     updateLivingCount();
 };
 
+// Initializes a new game and resets the canvas and values
 const resetGame = () => {
     resetReady();
     resetLiving();
     resetPosition();
     marcoCallCount = 0;
     clearScreen();
+    clearInterval(timerInterval);
     drawGameOver();
 };

@@ -11,14 +11,44 @@
     <script type="text/javascript" src="/assets/js/materialize.min.js"></script>
 </head>
 <body>
-    <button id="readyButton">Ready</button>
+    <h1 class="z-depth-3 red-text">Marco Polo</h1>
+    <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header">Game Description</div>
+          <div class="collapsible-body"><span>This game is a replica of the classic game
+              Marco Polo. Built with Materialize for the front end, NodeJs for the backend, 
+              Socket.io for websockets utility and the Canvas API for drawing</span></div>
+        </li>
+        <li>
+          <div class="collapsible-header">How to Play</div>
+          <div class="collapsible-body"><span>To start the game, all players must hit the ready
+              button. Once the game starts, you will become the seeker or one of the many runners.
+              If the only object spawned in the canvas is a red square, you are the seeker. Otherwise
+              you are a runner.</span>
+            <p>As a seeker...  your job is to find and collide with all other players within the time
+              limit. You will have 30 seconds to find them all. In order call out "Marco!" and see the
+              other players, you have to hit the spacebar but be careful as you only have 6 location
+              checks! Colliding with all players will win the game!</p>
+              <p>As a runner... your job is to avoid the seeker at all costs! You can see all the other
+              players in the game who will also be trying to avoid the seeker. If you can survive for
+              30 seconds you win!</p>
+               
+         </div>
+        </li>
+        <li>
+          <div class="collapsible-header">Controls</div>
+          <div class="collapsible-body"><span>Movement: WASD</span>
+            <p>Check Location: Spacebar</p></div>
+        </li>
+  </ul>
     <p id="userInfo">USER COUNT AND READY GOES HERE</p>
+    <button id="readyButton" class="waves-effect waves-light btn red">Ready</button>
     <div class="item html">
         <h2>0</h2>
         <svg width="160" height="160" xmlns="http://www.w3.org/2000/svg">
             <g>
                 <title>Layer 1</title>
-                <circle id="circle" class="circle_animation" r="69.85699" cy="81" cx="81" stroke-width="8" stroke="#6fdb6f"   fill="none"/>
+                <circle id="circle" class="circle_animation" r="69.85699" cy="81" cx="81" stroke-width="8" stroke="red"   fill="LightGrey"/>
             </g>
         </svg>
     </div>

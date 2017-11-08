@@ -44,8 +44,11 @@ const handleKeyUp = (e) => {
     }
 };
 
+// Handles ready button event
 const handleReadyUp = () => {
     readyStatus = true;
+    Materialize.toast('Ready!', 3000);
     socket.emit('userReady');
 };
+
 

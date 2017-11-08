@@ -1,12 +1,19 @@
+// Gets a random integer
 // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
 const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+// Updates the users info 
 const updateUserInfo = () => {
-    userInfo.innerHTML = `Players: ${users.count} \nReady: ${users.ready} \nAlive: ${users.alive}`;
+    userInfo.innerHTML = `<ul class="collection">
+                            <li class="collection-item">Players In Lobby: ${users.count}</li>
+                            <li class="collection-item">Players Ready: ${users.ready}</li>
+                            <li class="collection-item">Players Alive: ${users.alive}</li>
+                          </ul>`;
 };
 
+// Updates which players are alive and checks if there are any left
 const updateLivingCount = () => {
     let keys = Object.keys(players);
     
@@ -29,11 +36,13 @@ const updateLivingCount = () => {
     }
 };
 
+// Resets the ready status and button
 const resetReady = () => {
     readyStatus = false;
     readyButton.disabled = false;
 };
 
+// Resets the living status of all players
 const resetLiving = () => {
     let keys = Object.keys(players);
     
@@ -42,6 +51,7 @@ const resetLiving = () => {
     }
 };
 
+// Resets the positions and keydowns of all players
 const resetPosition = () => {
     let location = {x: getRandomInt(0, 575), y: getRandomInt(0, 375)};
         
@@ -56,6 +66,7 @@ const resetPosition = () => {
     socket.emit('updateLocation', players[hash]);
 };
 
+// Clears the canvas
 const clearScreen = () => {
     ctx.clearRect(0, 0, 600, 400);
 };

@@ -11,6 +11,7 @@ const checkAABB = (rect1, rect2, width, height) => {
   return false;
 };
 
+// Checks for all player collisions
 const checkPlayerCollision = (players) => {
     
     let keys = Object.keys(players);
@@ -52,6 +53,7 @@ const checkPlayerCollision = (players) => {
     }
 };
 
+// Check for collisions every 20ms
 const startPhysics = (players) => {
     setInterval(() => {
         checkPlayerCollision(players);

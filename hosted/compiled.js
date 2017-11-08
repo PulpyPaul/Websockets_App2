@@ -50,15 +50,14 @@ var drawTimer = function drawTimer() {
     maxTime = 30; /* how long the timer runs for */
     var initialOffset = '440';
     gameTimer = 0;
-    var interval = setInterval(function () {
+    timerInterval = setInterval(function () {
         $('.circle_animation').css('stroke-dashoffset', initialOffset - gameTimer * (initialOffset / maxTime));
         $('h2').text(gameTimer);
         if (gameTimer == maxTime + 1) {
             gameOver = true;
             updateLivingCount();
             $('svg').hide();
-            $('h2').hide();
-            clearInterval(interval);
+            clearInterval(timerInterval);
         }
         gameTimer++;
     }, 1000);
@@ -67,15 +66,15 @@ var drawTimer = function drawTimer() {
 var drawGameOver = function drawGameOver() {
 
     // Draws black cover screen
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draws 'Game Over' text
-    ctx.fillStyle = 'black';
-    ctx.font = "25px Arial";
+    ctx.fillStyle = 'red';
+    ctx.font = "50px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
-    ctx.fillText("Ready Up to play again!", canvas.width / 2, canvas.height / 2 + 50);
+    ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2 - 100);
+    ctx.fillText("Ready up to play again!", canvas.width / 2, canvas.height / 2);
 };
 'use strict';
 
@@ -96,6 +95,7 @@ var gameTimer = void 0; // how long the game has been running
 var maxTime = void 0; // max time of a game
 var gameOver = false; // if the game is over
 var marcoWins = false; // if marco wins
+var timerInterval = void 0;
 
 var init = function init() {
 
@@ -115,6 +115,9 @@ var init = function init() {
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
     readyButton.onclick = handleReadyUp;
+
+    // Hides elements that don't need to be shown yet
+    $('h2').hide();
 
     socket.on('join', addUser);
     socket.on('updatePlayer', updatePlayer);
@@ -206,6 +209,7 @@ var startGame = function startGame(data) {
     // Starts animating
     players = data;
     requestAnimationFrame(draw);
+    $('svg').show();
     socket.emit('startPhysics');
     updateLivingCount();
     drawTimer();
@@ -222,6 +226,7 @@ var resetGame = function resetGame() {
     resetPosition();
     marcoCallCount = 0;
     clearScreen();
+    clearInterval(timerInterval);
     drawGameOver();
 };
 'use strict';
@@ -232,7 +237,7 @@ var getRandomInt = function getRandomInt(min, max) {
 };
 
 var updateUserInfo = function updateUserInfo() {
-    userInfo.innerHTML = 'Players: ' + users.count + ' \nReady: ' + users.ready + ' \nAlive: ' + users.alive;
+    userInfo.innerHTML = '<ul class="collection">\n                            <li class="collection-item">Players In Lobby: ' + users.count + '</li>\n                            <li class="collection-item">Players Ready: ' + users.ready + '</li>\n                            <li class="collection-item">Players Alive: ' + users.alive + '</li>\n                          </ul>';
 };
 
 var updateLivingCount = function updateLivingCount() {
@@ -337,5 +342,6 @@ var handleKeyUp = function handleKeyUp(e) {
 
 var handleReadyUp = function handleReadyUp() {
     readyStatus = true;
+    Materialize.toast('Ready!', 3000);
     socket.emit('userReady');
 };

@@ -98,11 +98,13 @@ const setupSockets = (ioInstance) => {
       io.sockets.in('room1').emit('updateReady', users);
       socket.leave('room1');
     });
-      
+    
+    // starts calculating physics
     socket.on('startPhysics', () => {
       physics.startPhysics(players);
     });
-      
+    
+    // sends event to restart the round
     socket.on('restartRound', () => {
        users.ready = 0;
        io.sockets.in('room1').emit('restartRound');
@@ -110,10 +112,12 @@ const setupSockets = (ioInstance) => {
   });
 };
 
+// Handles a collision between players
 const handleCollision = (playerObj) => {
     io.sockets.in('room1').emit('updateDeath', playerObj);
 };
 
+// Gets a random int
 // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
 const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
